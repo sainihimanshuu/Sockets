@@ -34,6 +34,7 @@ int main(){
     int sockfd, new_fd;
     char dst[INET6_ADDRSTRLEN], s[INET6_ADDRSTRLEN];
     struct sigaction sa;
+    int yes=1;
 
     hints.ai_family=AF_INET;
     hints.ai_socktype=SOCK_STREAM;
@@ -49,6 +50,11 @@ int main(){
         if(sockfd==-1){
             perror("socket");
             continue;
+        }
+
+        if(setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1){
+            perror("sock opt");
+            exit(1);
         }
 
         if(bind(sockfd, p->ai_addr, p->ai_addrlen)!=0){
